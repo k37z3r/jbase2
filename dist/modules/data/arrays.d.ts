@@ -1,0 +1,131 @@
+/**
+ * @file src/modules/data/arrays.ts
+ * @version 2.0.0
+ * @since 2.0.0
+ * @license GPL-3.0-or-later
+ * @copyright Sven Minio 2026
+ * @author Sven Minio <https://sven-minio.de>
+ * @category Data
+ * @description
+ * * 🇬🇧: Utility functions for array manipulation and data processing.
+ * * 🇩🇪: Hilfsfunktionen für Array-Manipulation und Datenverarbeitung.
+ * @requires ./types
+ * * 🇬🇧: Depends on match logic and types.
+ * * 🇩🇪: Hängt von Match-Logik und Typen ab.
+ */
+import { MatchMode } from './types';
+/**
+ * * 🇬🇧: Splits an array into smaller groups (chunks). Ideal for pagination or grid layouts.
+ * * 🇩🇪: Teilt ein Array in kleinere Gruppen (Chunks) auf. Ideal für Pagination oder Grid-Layouts.
+ * @example
+ * chunk([1, 2, 3, 4, 5], 2) // => [[1, 2], [3, 4], [5]]
+ * @param array
+ * * 🇬🇧: The source array.
+ * * 🇩🇪: Das Ursprungs-Array.
+ * @param size
+ * * 🇬🇧: The size of each chunk.
+ * * 🇩🇪: Die Größe jedes Chunks.
+ * @returns
+ * * 🇬🇧: An array of arrays.
+ * * 🇩🇪: Ein Array aus Arrays.
+ */
+export declare function chunk<T>(array: T[], size: number): T[][];
+/**
+ * * 🇬🇧: Merges multiple arrays into a single flat array.
+ * * 🇩🇪: Führt mehrere Arrays zu einem einzigen flachen Array zusammen.
+ * @param arrays
+ * * 🇬🇧: A list of arrays.
+ * * 🇩🇪: Eine Liste von Arrays.
+ * @returns
+ * * 🇬🇧: A new, merged array.
+ * * 🇩🇪: Ein neues, zusammengefügtes Array.
+ */
+export declare function merge<T>(...arrays: T[][]): T[];
+/**
+ * * 🇬🇧: Safely adds an element at a specific position without mutating the original array (Immutable).
+ * * 🇩🇪: Fügt ein Element sicher an einer bestimmten Position hinzu, ohne das Original-Array zu mutieren (Immutable).
+ * @param array
+ * * 🇬🇧: The array.
+ * * 🇩🇪: Das Array.
+ * @param item
+ * * 🇬🇧: The item to add.
+ * * 🇩🇪: Das hinzuzufügende Element.
+ * @param index
+ * * 🇬🇧: The position (default: end). Negative values count from the back (-1 = before the last one).
+ * * 🇩🇪: Die Position (Standard: Ende). Negative Werte zählen von hinten (-1 = vor dem letzten).
+ * @returns
+ * * 🇬🇧: A new array including the element.
+ * * 🇩🇪: Ein neues Array inklusive dem Element.
+ */
+export declare function add<T>(array: T[], item: T, index?: number): T[];
+/**
+ * * 🇬🇧: Removes elements based on index or match logic.
+ * * 🇩🇪: Entfernt Elemente basierend auf Index oder Match-Logik.
+ */
+export declare const remove: {
+    /**
+     * * 🇬🇧: Removes an element at a specific index.
+     * * 🇩🇪: Entfernt ein Element an einem spezifischen Index.
+     * @param array
+     * * 🇬🇧: The array.
+     * * 🇩🇪: Das Array.
+     * @param index
+     * * 🇬🇧: The index (negative values allowed).
+     * * 🇩🇪: Der Index (negativ möglich).
+     */
+    at<T>(array: T[], index: number): T[];
+    /**
+     * * 🇬🇧: Removes the first element.
+     * * 🇩🇪: Entfernt das erste Element.
+     */
+    first<T>(array: T[]): T[];
+    /**
+     * * 🇬🇧: Removes the last element.
+     * * 🇩🇪: Entfernt das letzte Element.
+     */
+    last<T>(array: T[]): T[];
+    /**
+     * * 🇬🇧: Removes all elements matching a query condition.
+     * * 🇩🇪: Entfernt alle Elemente, die einer Suchbedingung entsprechen.
+     * @example
+     * remove.byMatch(users, 'Admin', 'exact', 'role')
+     * @param array
+     * * 🇬🇧: The array.
+     * * 🇩🇪: Das Array.
+     * @param query
+     * * 🇬🇧: The search query.
+     * * 🇩🇪: Der Suchbegriff.
+     * @param mode
+     * * 🇬🇧: The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
+     * * 🇩🇪: Der Vergleichsmodus ('exact', 'contains', 'startsWith', 'endsWith').
+     * @param key
+     * * 🇬🇧: (Optional) The object key if it is an array of objects.
+     * * 🇩🇪: (Optional) Der Objektschlüssel, falls es ein Array von Objekten ist.
+     */
+    byMatch<T>(array: T[], query: string | number, mode?: MatchMode, key?: keyof T): T[];
+};
+/**
+ * * 🇬🇧: Searches for elements in the array.
+ * * 🇩🇪: Sucht Elemente im Array.
+ */
+export declare const find: {
+    /**
+     * * 🇬🇧: Finds the index of the first match.
+     * * 🇩🇪: Findet den Index des ersten Treffers.
+     * @returns
+     * * 🇬🇧: Index or -1.
+     * * 🇩🇪: Index oder -1.
+     */
+    index<T>(array: T[], query: string | number, mode?: MatchMode, key?: keyof T): number;
+    /**
+     * * 🇬🇧: Returns all elements matching the condition (Filter).
+     * * 🇩🇪: Gibt alle Elemente zurück, die der Bedingung entsprechen (Filter).
+     */
+    all<T>(array: T[], query: string | number, mode?: MatchMode, key?: keyof T): T[];
+    /**
+     * * 🇬🇧: Returns the first matching element (or undefined).
+     * * 🇩🇪: Gibt das erste gefundene Element zurück (oder undefined).
+     */
+    first<T>(array: T[], query: string | number, mode?: MatchMode, key?: keyof T): T | undefined;
+};
+//# sourceMappingURL=arrays.d.ts.map
