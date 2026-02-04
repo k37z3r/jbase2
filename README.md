@@ -13,13 +13,13 @@ jBase offers a familiar chainable API (similar to jQuery) but is built on modern
 
 ## 📥 Installation
 
-### via NPM / Yarn (coming soon)
+### via NPM / Yarn
 Ideal for modern web apps using bundlers like Webpack, Vite, or Rollup.
 
 ```bash
-npm install jbase
+npm install @k37z3r/jbase
 # or
-yarn add jbase
+yarn add @k37z3r/jbase
 
 ```
 
