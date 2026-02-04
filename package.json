@@ -1,0 +1,58 @@
+{
+    "name": "@k37z3r/jbase",
+    "version": "2.0.1",
+    "description": "A modern micro-framework for the web: jBase offers the familiar syntax of classic DOM libraries, but without their baggage. Fully typed, modular, and optimized for modern browser engines.",
+    "private": false,
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "browser": "./dist/jbase.min.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build:ts": "tsc",
+        "build:browser": "node build.js",
+        "build": "npm run build:browser",
+        "prepublishOnly": "npm run build"
+    },
+    "author": "Sven Minio (https://github.com/k37z3r/jBase-2.0)",
+    "homepage": "https://github.com/k37z3r/jBase-2.0",
+    "funding": {
+        "type": "paypal",
+        "url": "https://www.paypal.com/donate/?hosted_button_id=PAE6M49YXLHUU"
+    },
+    "bugs": {
+        "url": "https://github.com/k37z3r/jBase-2.0/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/k37z3r/jBase-2.0.git"
+    },
+    "license": "GPL-3.0-or-later",
+    "dependencies": {
+        "tslib": "^2.8.1"
+    },
+    "devDependencies": {
+        "@types/node": "^22.0.0",
+        "esbuild": "^0.27.2",
+        "typescript": "^5.3.3"
+    },
+    "keywords": [
+        "framework",
+        "dom",
+        "typescript",
+        "javascript",
+        "jbase"
+    ],
+    "type": "commonjs",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs"
+        }
+    }
+}

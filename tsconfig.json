@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "target": "ES2023",
+        "lib": [
+            "ES2023", 
+            "DOM", 
+            "DOM.Iterable"
+        ],
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "declaration": true,
+        "declarationMap": true,
+        "rootDir": "./src",
+        "outDir": "./dist/",
+        "strict": true,
+        "importHelpers": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "removeComments": false,
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "emitDeclarationOnly": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "sourceMap": true,
+        "baseUrl": "./"
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+    ]
+}
