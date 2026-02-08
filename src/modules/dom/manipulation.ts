@@ -1,41 +1,66 @@
 /**
  * @file src/modules/dom/manipulation.ts
- * @version 2.0.1
+ * @version 2.0.2
  * @since 2.0.0
  * @license GPL-3.0-or-later
  * @copyright Sven Minio 2026
  * @author Sven Minio <https://sven-minio.de>
  * @category DOM
  * @description
- * * 🇬🇧: Methods for inserting, moving, and removing elements (append, prepend, remove).
- * * 🇩🇪: Methoden zum Einfügen, Verschieben und Entfernen von Elementen (append, prepend, remove).
+ * * Methods for inserting, moving, and removing elements (append, prepend, remove).
  * @requires ../../core
- * * 🇬🇧: Depends on the core jBase class for type definitions.
- * * 🇩🇪: Hängt von der Core-jBase-Klasse für Typ-Definitionen ab.
+ * * Depends on the core jBase class for type definitions.
  */
 
 import { jBase } from '../../core';
 
 /**
- * * 🇬🇧: Internal Helper: Converts a string into a DOM Node.
- * * 🇩🇪: Interner Helper: Wandelt einen String in eine DOM Node um.
+ * * Internal Helper: Parses a raw HTML string into a DOM element using a temporary container.
+ * @param html
+ * * The HTML string to parse.
+ * @param doc
+ * * The document context to use for creation (essential for SSR).
+ * @returns
+ * * The created HTMLElement.
  */
-function parseHTML(html: string): HTMLElement {
-    const tmp = document.createElement('div');
+function parseHTML(html: string, doc: Document): HTMLElement {
+    const tmp = doc.createElement('div');
     tmp.innerHTML = html.trim();
     return tmp.firstElementChild as HTMLElement;
 }
 
 /**
- * * 🇬🇧: Internal Helper: Converts arbitrary input into a DocumentFragment to minimize reflows.
- * * 🇩🇪: Interner Helper: Wandelt beliebigen Input in ein DocumentFragment um, um Reflows zu minimieren.
+ * * Internal Helper: Retrieves the correct document context from a jBase collection.
+ * * Ensures compatibility with Node.js/JSDOM by preferring the element's ownerDocument over the global document.
+ * @param collection
+ * * The jBase instance to check.
+ * @returns
+ * * The found Document object or null (in strict Node environments without global context).
  */
-function normalizeToFragment(content: string | Node | jBase | (string | Node)[]): DocumentFragment {
-    const fragment = document.createDocumentFragment();
+function getDoc(collection: jBase): Document {
+    if (collection.length > 0 && collection[0] instanceof Element) {
+        return collection[0].ownerDocument;
+    }
+    return (typeof document !== 'undefined') ? document : (null as any);
+}
+
+/**
+ * * Internal Helper: Normalizes various content types into a single DocumentFragment.
+ * * Handles HTML strings (parsing), DOM Nodes, Arrays, NodeLists, and jBase collections recursively.
+ * * Using a Fragment minimizes browser reflows during insertion.
+ * @param content
+ * * The content to normalize (String, Node, Array, Collection).
+ * @param doc
+ * * The document context to use for element creation (essential for SSR).
+ * @returns
+ * * A DocumentFragment containing the processed DOM nodes.
+ */
+function normalizeToFragment(content: string | Node | jBase | (string | Node)[], doc: Document): DocumentFragment {
+    const fragment = doc.createDocumentFragment();
 
     const add = (item: any) => {
         if (typeof item === 'string') {
-            const temp = document.createElement('div');
+            const temp = doc.createElement('div');
             temp.innerHTML = item.trim();
             while (temp.firstChild) {
                 fragment.appendChild(temp.firstChild);
@@ -52,11 +77,9 @@ function normalizeToFragment(content: string | Node | jBase | (string | Node)[])
 }
 
 /**
- * * 🇬🇧: Removes the selected elements from the DOM.
- * * 🇩🇪: Entfernt die ausgewählten Elemente vollständig aus dem DOM.
+ * * Removes the selected elements from the DOM.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function remove(this: jBase): jBase {
     this.forEach(el => {
@@ -66,11 +89,9 @@ export function remove(this: jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Removes all child nodes and text content from the selected elements.
- * * 🇩🇪: Entfernt alle Kind-Elemente und Textknoten aus den ausgewählten Elementen.
+ * * Removes all child nodes and text content from the selected elements.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function empty(this: jBase): jBase {
     this.forEach(el => {
@@ -80,11 +101,9 @@ export function empty(this: jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Replaces each element with a deep clone of itself. Useful for removing all event listeners ("Nuke" strategy).
- * * 🇩🇪: Ersetzt jedes Element durch eine tiefe Kopie seiner selbst. Nützlich, um alle Event-Listener hart zu entfernen.
+ * * Replaces each element with a deep clone of itself. Useful for removing all event listeners ("Nuke" strategy).
  * @returns
- * * 🇬🇧: A new jBase instance containing the cloned elements.
- * * 🇩🇪: Eine neue jBase-Instanz, die die geklonten Elemente enthält.
+ * * A new jBase instance containing the cloned elements.
  */
 export function replaceWithClone(this: jBase): jBase {
     const newElements: Element[] = [];
@@ -100,21 +119,27 @@ export function replaceWithClone(this: jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Inserts content at the end of each selected element (inside).
- * * 🇩🇪: Fügt Inhalt am Ende jedes Elements in der Sammlung ein (innerhalb).
+ * * Inserts content at the end of each selected element (inside).
  * @param content
- * * 🇬🇧: HTML string, DOM Node, or jBase collection.
- * * 🇩🇪: HTML-String, DOM-Node oder jBase-Sammlung.
+ * * HTML string, DOM Node, or jBase collection.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function append(this: jBase, content: string | Node | jBase): jBase {
-    const fragment = normalizeToFragment(content);
-
+    if (typeof content === 'string') {
+        this.forEach(el => {
+            if (el instanceof Element) {
+                el.insertAdjacentHTML('beforeend', content);
+            }
+        });
+        return this;
+    }
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const fragment = normalizeToFragment(content, doc);
     this.forEach((el, i) => {
         if (el instanceof Element) {
-            // Clone fragment for multiple targets, retain original for the last one
             const contentToInsert = (i < this.length - 1) ? fragment.cloneNode(true) : fragment;
             el.appendChild(contentToInsert);
         }
@@ -123,18 +148,25 @@ export function append(this: jBase, content: string | Node | jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Inserts content at the beginning of each selected element (inside).
- * * 🇩🇪: Fügt Inhalt am Anfang jedes Elements in der Sammlung ein (innerhalb).
+ * * Inserts content at the beginning of each selected element (inside).
  * @param content
- * * 🇬🇧: HTML string, DOM Node, or jBase collection.
- * * 🇩🇪: HTML-String, DOM-Node oder jBase-Sammlung.
+ * * HTML string, DOM Node, or jBase collection.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function prepend(this: jBase, content: string | Node | jBase): jBase {
-    const fragment = normalizeToFragment(content);
-
+    if (typeof content === 'string') {
+        this.forEach(el => {
+            if (el instanceof Element) {
+                el.insertAdjacentHTML('afterbegin', content);
+            }
+        });
+        return this;
+    }
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const fragment = normalizeToFragment(content, doc);
     this.forEach((el, i) => {
         if (el instanceof Element) {
             const contentToInsert = (i < this.length - 1) ? fragment.cloneNode(true) : fragment;
@@ -145,18 +177,25 @@ export function prepend(this: jBase, content: string | Node | jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Inserts content before the element (outside).
- * * 🇩🇪: Fügt Inhalt VOR dem Element ein (außerhalb).
+ * * Inserts content before the element (outside).
  * @param content
- * * 🇬🇧: HTML string, DOM Node, or jBase collection.
- * * 🇩🇪: HTML-String, DOM-Node oder jBase-Sammlung.
+ * * HTML string, DOM Node, or jBase collection.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function before(this: jBase, content: string | Node | jBase): jBase {
-    const fragment = normalizeToFragment(content);
-
+    if (typeof content === 'string') {
+        this.forEach(el => {
+            if (el instanceof Element) {
+                el.insertAdjacentHTML('beforebegin', content);
+            }
+        });
+        return this;
+    }
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const fragment = normalizeToFragment(content, doc);
     this.forEach((el, i) => {
         if (el instanceof Element) {
             const contentToInsert = (i < this.length - 1) ? fragment.cloneNode(true) : fragment;
@@ -167,18 +206,25 @@ export function before(this: jBase, content: string | Node | jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Inserts content after the element (outside).
- * * 🇩🇪: Fügt Inhalt NACH dem Element ein (außerhalb).
+ * * Inserts content after the element (outside).
  * @param content
- * * 🇬🇧: HTML string, DOM Node, or jBase collection.
- * * 🇩🇪: HTML-String, DOM-Node oder jBase-Sammlung.
+ * * HTML string, DOM Node, or jBase collection.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function after(this: jBase, content: string | Node | jBase): jBase {
-    const fragment = normalizeToFragment(content);
-
+    if (typeof content === 'string') {
+        this.forEach(el => {
+            if (el instanceof Element) {
+                el.insertAdjacentHTML('afterend', content);
+            }
+        });
+        return this;
+    }
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const fragment = normalizeToFragment(content, doc);
     this.forEach((el, i) => {
         if (el instanceof Element) {
             const contentToInsert = (i < this.length - 1) ? fragment.cloneNode(true) : fragment;
@@ -189,18 +235,17 @@ export function after(this: jBase, content: string | Node | jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Replaces the element with new content.
- * * 🇩🇪: Ersetzt das Element durch neuen Inhalt.
+ * * Replaces the element with new content.
  * @param content
- * * 🇬🇧: The new content.
- * * 🇩🇪: Der neue Inhalt.
+ * * The new content.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function replaceWith(this: jBase, content: string | Node | jBase): jBase {
-    const fragment = normalizeToFragment(content);
-
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const fragment = normalizeToFragment(content, doc);
     this.forEach((el, i) => {
         if (el instanceof Element) {
             const contentToInsert = (i < this.length - 1) ? fragment.cloneNode(true) : fragment;
@@ -211,19 +256,19 @@ export function replaceWith(this: jBase, content: string | Node | jBase): jBase 
 }
 
 /**
- * * 🇬🇧: Appends the selected elements to the end of a target element.
- * * 🇩🇪: Hängt die aktuellen Elemente an das Ende des Ziel-Elements an.
+ * * Appends the selected elements to the end of a target element.
  * @param target
- * * 🇬🇧: CSS selector or DOM element.
- * * 🇩🇪: Der CSS-Selektor oder das DOM-Element.
+ * * CSS selector or DOM element.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function appendTo(this: jBase, target: string | Element): jBase {
-    const parent = typeof target === 'string' ? document.querySelector(target) : target;
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const parent = typeof target === 'string' ? doc.querySelector(target) : target;
     if (parent instanceof Element) {
-        const fragment = document.createDocumentFragment();
+        const fragment = doc.createDocumentFragment();
         this.forEach(el => {
             if (el instanceof Node) fragment.appendChild(el);
         });
@@ -233,19 +278,19 @@ export function appendTo(this: jBase, target: string | Element): jBase {
 }
 
 /**
- * * 🇬🇧: Prepends the selected elements to the beginning of a target element.
- * * 🇩🇪: Fügt die aktuellen Elemente am Anfang des Ziel-Elements ein.
+ * * Prepends the selected elements to the beginning of a target element.
  * @param target
- * * 🇬🇧: CSS selector or DOM element.
- * * 🇩🇪: Der CSS-Selektor oder das DOM-Element.
+ * * CSS selector or DOM element.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function prependTo(this: jBase, target: string | Element): jBase {
-    const parent = typeof target === 'string' ? document.querySelector(target) : target;
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const parent = typeof target === 'string' ? doc.querySelector(target) : target;
     if (parent instanceof Element) {
-        const fragment = document.createDocumentFragment();
+        const fragment = doc.createDocumentFragment();
         this.forEach(el => {
             if (el instanceof Node) fragment.appendChild(el);
         });
@@ -255,19 +300,19 @@ export function prependTo(this: jBase, target: string | Element): jBase {
 }
 
 /**
- * * 🇬🇧: Inserts the selected elements immediately before the target element.
- * * 🇩🇪: Fügt die aktuellen Elemente unmittelbar VOR dem Ziel-Element ein.
+ * * Inserts the selected elements immediately before the target element.
  * @param target
- * * 🇬🇧: CSS selector or DOM element.
- * * 🇩🇪: Der CSS-Selektor oder das DOM-Element.
+ * * CSS selector or DOM element.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function insertBefore(this: jBase, target: string | Element): jBase {
-    const targetEl = typeof target === 'string' ? document.querySelector(target) : target;
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const targetEl = typeof target === 'string' ? doc.querySelector(target) : target;
     if (targetEl instanceof Element) {
-        const fragment = document.createDocumentFragment();
+        const fragment = doc.createDocumentFragment();
         this.forEach(el => {
             if (el instanceof Node) fragment.appendChild(el);
         });
@@ -277,19 +322,19 @@ export function insertBefore(this: jBase, target: string | Element): jBase {
 }
 
 /**
- * * 🇬🇧: Inserts the selected elements immediately after the target element.
- * * 🇩🇪: Fügt die aktuellen Elemente unmittelbar NACH dem Ziel-Element ein.
+ * * Inserts the selected elements immediately after the target element.
  * @param target
- * * 🇬🇧: CSS selector or DOM element.
- * * 🇩🇪: Der CSS-Selektor oder das DOM-Element.
+ * * CSS selector or DOM element.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function insertAfter(this: jBase, target: string | Element): jBase {
-    const targetEl = typeof target === 'string' ? document.querySelector(target) : target;
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const targetEl = typeof target === 'string' ? doc.querySelector(target) : target;
     if (targetEl instanceof Element) {
-        const fragment = document.createDocumentFragment();
+        const fragment = doc.createDocumentFragment();
         this.forEach(el => {
             if (el instanceof Node) fragment.appendChild(el);
         });
@@ -299,19 +344,19 @@ export function insertAfter(this: jBase, target: string | Element): jBase {
 }
 
 /**
- * * 🇬🇧: Wraps each selected element with the specified HTML structure.
- * * 🇩🇪: Umschließt jedes Element in der Auswahl mit der angegebenen HTML-Struktur.
+ * * Wraps each selected element with the specified HTML structure.
  * @param wrapperHtml
- * * 🇬🇧: HTML string defining the wrapper (e.g., `<div class="box"></div>`).
- * * 🇩🇪: Ein HTML-String, der die Wrapper-Struktur definiert (z.B. `<div class="box"></div>`).
+ * * HTML string defining the wrapper (e.g., `<div class="box"></div>`).
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function wrap(this: jBase, wrapperHtml: string): jBase {
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
     this.forEach(el => {
         if (el instanceof Element) {
-            const wrapper = parseHTML(wrapperHtml);
+            const wrapper = parseHTML(wrapperHtml, doc);
             if (el.parentNode) {
                 el.parentNode.insertBefore(wrapper, el);
             }
@@ -322,22 +367,27 @@ export function wrap(this: jBase, wrapperHtml: string): jBase {
 }
 
 /**
- * * 🇬🇧: Removes the direct parent of the selected elements from the DOM.
- * * 🇩🇪: Entfernt das direkte Elternelement der ausgewählten Elemente aus dem DOM.
+ * * Removes the direct parent of the selected elements from the DOM.
  * @returns
- * * 🇬🇧: The current jBase instance.
- * * 🇩🇪: Die aktuelle jBase-Instanz.
+ * * The current jBase instance.
  */
 export function unwrap(this: jBase): jBase {
+    const doc = getDoc(this);
+    if (!doc)
+        return this;
+    const parents = new Set<Element>();
     this.forEach(el => {
         if (el instanceof Element && el.parentElement) {
-            const parent = el.parentElement;
-            const fragment = document.createDocumentFragment();
-            while (parent.firstChild) {
-                fragment.appendChild(parent.firstChild);
-            }
-            parent.replaceWith(fragment);
+            parents.add(el.parentElement);
         }
+    });
+
+    parents.forEach(parent => {
+        const fragment = doc.createDocumentFragment();
+        while (parent.firstChild) {
+            fragment.appendChild(parent.firstChild);
+        }
+        parent.replaceWith(fragment);
     });
     return this;
 }

@@ -1,35 +1,29 @@
 /**
  * @file src/modules/data/arrays.ts
- * @version 2.0.1
+ * @version 2.0.2
  * @since 2.0.0
  * @license GPL-3.0-or-later
  * @copyright Sven Minio 2026
  * @author Sven Minio <https://sven-minio.de>
  * @category Data
  * @description
- * * 🇬🇧: Utility functions for array manipulation and data processing.
- * * 🇩🇪: Hilfsfunktionen für Array-Manipulation und Datenverarbeitung.
+ * * Utility functions for array manipulation and data processing.
  * @requires ./types
- * * 🇬🇧: Depends on match logic and types.
- * * 🇩🇪: Hängt von Match-Logik und Typen ab.
+ * * Depends on types.
  */
 
-import { MatchMode, checkMatch } from './types';
+import { MatchMode } from './types';
 
 /**
- * * 🇬🇧: Splits an array into smaller groups (chunks). Ideal for pagination or grid layouts.
- * * 🇩🇪: Teilt ein Array in kleinere Gruppen (Chunks) auf. Ideal für Pagination oder Grid-Layouts.
+ * * Splits an array into smaller groups (chunks). Ideal for pagination or grid layouts.
  * @example
- * chunk([1, 2, 3, 4, 5], 2) // => [[1, 2], [3, 4], [5]]
+ * chunk([1, 2, 3, 4, 5], 2) => [[1, 2], [3, 4], [5]]
  * @param array
- * * 🇬🇧: The source array.
- * * 🇩🇪: Das Ursprungs-Array.
+ * * The source array.
  * @param size
- * * 🇬🇧: The size of each chunk.
- * * 🇩🇪: Die Größe jedes Chunks.
+ * * The size of each chunk.
  * @returns
- * * 🇬🇧: An array of arrays.
- * * 🇩🇪: Ein Array aus Arrays.
+ * * An array of arrays.
  */
 export function chunk<T>(array: T[], size: number): T[][] {
     const chunks: T[][] = [];
@@ -40,34 +34,26 @@ export function chunk<T>(array: T[], size: number): T[][] {
 }
 
 /**
- * * 🇬🇧: Merges multiple arrays into a single flat array.
- * * 🇩🇪: Führt mehrere Arrays zu einem einzigen flachen Array zusammen.
+ * * Merges multiple arrays into a single flat array.
  * @param arrays
- * * 🇬🇧: A list of arrays.
- * * 🇩🇪: Eine Liste von Arrays.
+ * * A list of arrays.
  * @returns
- * * 🇬🇧: A new, merged array.
- * * 🇩🇪: Ein neues, zusammengefügtes Array.
+ * * A new, merged array.
  */
 export function mergeArray<T>(...arrays: T[][]): T[] {
     return [].concat(...(arrays as any));
 }
 
 /**
- * * 🇬🇧: Safely adds an element at a specific position without mutating the original array (Immutable).
- * * 🇩🇪: Fügt ein Element sicher an einer bestimmten Position hinzu, ohne das Original-Array zu mutieren (Immutable).
+ * * Safely adds an element at a specific position without mutating the original array (Immutable).
  * @param array
- * * 🇬🇧: The array.
- * * 🇩🇪: Das Array.
+ * * The array.
  * @param item
- * * 🇬🇧: The item to add.
- * * 🇩🇪: Das hinzuzufügende Element.
+ * * The item to add.
  * @param index
- * * 🇬🇧: The position (default: end). Negative values count from the back (-1 = before the last one).
- * * 🇩🇪: Die Position (Standard: Ende). Negative Werte zählen von hinten (-1 = vor dem letzten).
+ * * The position (default: end). Negative values count from the back (-1 = before the last one).
  * @returns
- * * 🇬🇧: A new array including the element.
- * * 🇩🇪: Ein neues Array inklusive dem Element.
+ * * A new array including the element.
  */
 export function add<T>(array: T[], item: T, index: number = array.length): T[] {
     const copy = [...array];
@@ -77,19 +63,15 @@ export function add<T>(array: T[], item: T, index: number = array.length): T[] {
 }
 
 /**
- * * 🇬🇧: Removes elements based on index or match logic.
- * * 🇩🇪: Entfernt Elemente basierend auf Index oder Match-Logik.
+ * * Removes elements based on index or match logic.
  */
 export const remove = {
     /**
-     * * 🇬🇧: Removes an element at a specific index.
-     * * 🇩🇪: Entfernt ein Element an einem spezifischen Index.
+     * * Removes an element at a specific index.
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      * @param index
-     * * 🇬🇧: The index (negative values allowed).
-     * * 🇩🇪: Der Index (negativ möglich).
+     * * The index (negative values allowed).
      */
     at<T>(array: T[], index: number): T[] {
         const copy = [...array];
@@ -101,183 +83,191 @@ export const remove = {
     },
 
     /**
-     * * 🇬🇧: Removes the first element.
-     * * 🇩🇪: Entfernt das erste Element.
+     * * Removes the first element.
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      */
     first<T>(array: T[]): T[] { return array.slice(1); },
 
     /**
-     * * 🇬🇧: Removes the last element.
-     * * 🇩🇪: Entfernt das letzte Element.
+     * * Removes the last element.
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      */
     last<T>(array: T[]): T[] { return array.slice(0, -1); },
 
     /**
-     * * 🇬🇧: Removes all elements matching a query condition.
-     * * 🇩🇪: Entfernt alle Elemente, die einer Suchbedingung entsprechen.
+     * * Removes all elements matching a query condition.
      * @example
      * remove.byMatch(users, 'Admin', 'exact', 'role')
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      * @param query
-     * * 🇬🇧: The search query.
-     * * 🇩🇪: Der Suchbegriff.
+     * * The search query.
      * @param mode
-     * * 🇬🇧: The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
-     * * 🇩🇪: Der Vergleichsmodus ('exact', 'contains', 'startsWith', 'endsWith').
+     * * The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
      * @param key
-     * * 🇬🇧: (Optional) The object key if it is an array of objects.
-     * * 🇩🇪: (Optional) Der Objektschlüssel, falls es ein Array von Objekten ist.
+     * * (Optional) The object key if it is an array of objects.
      */
     byMatch<T>(array: T[], query: string | number, mode: MatchMode = 'exact', key?: keyof T): T[] {
+        const queryStr = String(query).toLowerCase();
         return array.filter(item => {
             const val = key ? item[key] : item;
-            return !checkMatch(val, query, mode);
+            const valStr = String(val).toLowerCase();
+            switch (mode) {
+                case 'exact': return valStr === queryStr;
+                case 'startsWith': return valStr.startsWith(queryStr);
+                case 'endsWith': return valStr.endsWith(queryStr);
+                case 'contains': return valStr.includes(queryStr);
+                default: return false;
+            }
         });
     }
 };
 
 /**
- * * 🇬🇧: Searches for elements in the array.
- * * 🇩🇪: Sucht Elemente im Array.
+ * * Searches for elements in the array.
  */
 export const find = {
     /**
-     * * 🇬🇧: Finds the index of the first match.
-     * * 🇩🇪: Findet den Index des ersten Treffers.
+     * * Finds the index of the first match.
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      * @param query
-     * * 🇬🇧: The search query.
-     * * 🇩🇪: Der Suchbegriff.
+     * * The search query.
      * @param mode
-     * * 🇬🇧: The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
-     * * 🇩🇪: Der Vergleichsmodus ('exact', 'contains', 'startsWith', 'endsWith').
+     * * The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
      * @param key
-     * * 🇬🇧: (Optional) The object key if it is an array of objects.
-     * * 🇩🇪: (Optional) Der Objektschlüssel, falls es ein Array von Objekten ist.
+     * * (Optional) The object key if it is an array of objects.
      * @returns
-     * * 🇬🇧: Index or -1.
-     * * 🇩🇪: Index oder -1.
+     * * Index or -1.
      */
     at<T>(array: T[], query: string | number, mode: MatchMode = 'exact', key?: keyof T): number {
+        const queryStr = String(query).toLowerCase();
         return array.findIndex(item => {
             const val = key ? item[key] : item;
-            return checkMatch(val, query, mode);
+            const valStr = String(val).toLowerCase();
+            switch (mode) {
+                case 'exact': return valStr === queryStr;
+                case 'startsWith': return valStr.startsWith(queryStr);
+                case 'endsWith': return valStr.endsWith(queryStr);
+                case 'contains': return valStr.includes(queryStr);
+                default: return false;
+            }
         });
     },
 
     /**
-     * * 🇬🇧: Returns all elements matching the condition (Filter).
-     * * 🇩🇪: Gibt alle Elemente zurück, die der Bedingung entsprechen (Filter).
+     * * Returns all elements matching the condition (Filter).
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      * @param query
-     * * 🇬🇧: The search query.
-     * * 🇩🇪: Der Suchbegriff.
+     * * The search query.
      * @param mode
-     * * 🇬🇧: The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
-     * * 🇩🇪: Der Vergleichsmodus ('exact', 'contains', 'startsWith', 'endsWith').
+     * * The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
      * @param key
-     * * 🇬🇧: (Optional) The object key if it is an array of objects.
-     * * 🇩🇪: (Optional) Der Objektschlüssel, falls es ein Array von Objekten ist.
+     * * (Optional) The object key if it is an array of objects.
      * @returns
-     * * 🇬🇧: All matching elements or -1.
-     * * 🇩🇪: Alle passenden Elemente oder -1.
+     * * All matching elements or -1.
      */
     all<T>(array: T[], query: string | number, mode: MatchMode = 'exact', key?: keyof T): T[] {
+        const queryStr = String(query).toLowerCase();
         return array.filter(item => {
             const val = key ? item[key] : item;
-            return checkMatch(val, query, mode);
+            const valStr = String(val).toLowerCase();
+            switch (mode) {
+                case 'exact': return valStr === queryStr;
+                case 'startsWith': return valStr.startsWith(queryStr);
+                case 'endsWith': return valStr.endsWith(queryStr);
+                case 'contains': return valStr.includes(queryStr);
+                default: return false;
+            }
         });
     },
 
     /**
-     * * 🇬🇧: Returns the first matching element (or undefined).
-     * * 🇩🇪: Gibt das erste gefundene Element zurück (oder undefined).
+     * * Returns the first matching element (or undefined).
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      * @param query
-     * * 🇬🇧: The search query.
-     * * 🇩🇪: Der Suchbegriff.
+     * * The search query.
      * @param mode
-     * * 🇬🇧: The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
-     * * 🇩🇪: Der Vergleichsmodus ('exact', 'contains', 'startsWith', 'endsWith').
+     * * The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
      * @param key
-     * * 🇬🇧: (Optional) The object key if it is an array of objects.
-     * * 🇩🇪: (Optional) Der Objektschlüssel, falls es ein Array von Objekten ist.
+     * * (Optional) The object key if it is an array of objects.
      * @returns
-     * * 🇬🇧: Index or -1.
-     * * 🇩🇪: Index oder -1.
+     * * Index or -1.
      */
     first<T>(array: T[], query: string | number, mode: MatchMode = 'exact', key?: keyof T): T | undefined {
+        const queryStr = String(query).toLowerCase();
         return array.find(item => {
             const val = key ? item[key] : item;
-            return checkMatch(val, query, mode);
+            const valStr = String(val).toLowerCase();
+            switch (mode) {
+                case 'exact': return valStr === queryStr;
+                case 'startsWith': return valStr.startsWith(queryStr);
+                case 'endsWith': return valStr.endsWith(queryStr);
+                case 'contains': return valStr.includes(queryStr);
+                default: return false;
+            }
         });
     },
 
     /**
-     * * 🇬🇧: Returns the last matching element (or undefined).
-     * * 🇩🇪: Gibt das letzte gefundene Element zurück (oder undefined).
+     * * Returns the last matching element (or undefined).
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      * @param query
-     * * 🇬🇧: The search query.
-     * * 🇩🇪: Der Suchbegriff.
+     * * The search query.
      * @param mode
-     * * 🇬🇧: The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
-     * * 🇩🇪: Der Vergleichsmodus ('exact', 'contains', 'startsWith', 'endsWith').
+     * * The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
      * @param key
-     * * 🇬🇧: (Optional) The object key if it is an array of objects.
-     * * 🇩🇪: (Optional) Der Objektschlüssel, falls es ein Array von Objekten ist.
+     * * (Optional) The object key if it is an array of objects.
      * @returns
-     * * 🇬🇧: Index or -1.
-     * * 🇩🇪: Index oder -1.
+     * * Index or -1.
      */
     last<T>(array: T[], query: string | number, mode: MatchMode = 'exact', key?: keyof T): T | undefined {
+        const queryStr = String(query).toLowerCase();
         return [...array].reverse().find(item => {
             const val = key ? item[key] : item;
-            return checkMatch(val, query, mode);
+            const valStr = String(val).toLowerCase();
+            switch (mode) {
+                case 'exact': return valStr === queryStr;
+                case 'startsWith': return valStr.startsWith(queryStr);
+                case 'endsWith': return valStr.endsWith(queryStr);
+                case 'contains': return valStr.includes(queryStr);
+                default: return false;
+            }
         });
     },
 
     /**
-     * * 🇬🇧: Removes all elements matching a query condition.
-     * * 🇩🇪: Entfernt alle Elemente, die einer Suchbedingung entsprechen.
+     * * Removes all elements matching a query condition.
      * @example
      * find.byMatch(users, 'Admin', 'exact', 'role')
      * @param array
-     * * 🇬🇧: The array.
-     * * 🇩🇪: Das Array.
+     * * The array.
      * @param query
-     * * 🇬🇧: The search query.
-     * * 🇩🇪: Der Suchbegriff.
+     * * The search query.
      * @param mode
-     * * 🇬🇧: The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
-     * * 🇩🇪: Der Vergleichsmodus ('exact', 'contains', 'startsWith', 'endsWith').
+     * * The comparison mode ('exact', 'contains', 'startsWith', 'endsWith').
      * @param key
-     * * 🇬🇧: (Optional) The object key if it is an array of objects.
-     * * 🇩🇪: (Optional) Der Objektschlüssel, falls es ein Array von Objekten ist.
+     * * (Optional) The object key if it is an array of objects.
      * @returns
-     * * 🇬🇧: Index or -1.
-     * * 🇩🇪: Index oder -1.
+     * * Index or -1.
      */
     byMatch<T>(array: T[], query: string | number, mode: MatchMode = 'exact', key?: keyof T): number | undefined {
+        const queryStr = String(query).toLowerCase();
         return array.findIndex(item => {
             const val = key ? item[key] : item;
-            return checkMatch(val, query, mode);
+            const valStr = String(val).toLowerCase();
+            switch (mode) {
+                case 'exact': return valStr === queryStr;
+                case 'startsWith': return valStr.startsWith(queryStr);
+                case 'endsWith': return valStr.endsWith(queryStr);
+                case 'contains': return valStr.includes(queryStr);
+                default: return false;
+            }
         });
     }
 };

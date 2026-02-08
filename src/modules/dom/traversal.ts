@@ -1,17 +1,15 @@
 /**
  * @file src/modules/dom/traversal.ts
- * @version 2.0.1
+ * @version 2.0.2
  * @since 2.0.0
  * @license GPL-3.0-or-later
  * @copyright Sven Minio 2026
  * @author Sven Minio <https://sven-minio.de>
  * @category DOM
  * @description
- * * 🇬🇧: Methods for navigating the DOM tree (find, parent, children, siblings).
- * * 🇩🇪: Methoden zur Navigation im DOM-Baum (find, parent, children, siblings).
+ * * Methods for navigating the DOM tree (find, parent, children, siblings).
  * @requires ../../core
- * * 🇬🇧: Depends on the core jBase class for type definitions.
- * * 🇩🇪: Hängt von der Core-jBase-Klasse für Typ-Definitionen ab.
+ * * Depends on the core jBase class for type definitions.
  */
 
 import { jBase } from '../../core';
@@ -19,14 +17,11 @@ import { jBase } from '../../core';
 
 
 /**
- * * 🇬🇧: Traverses the parents (heading toward the document root) of each element and finds the first element that matches the specified selector.
- * * 🇩🇪: Durchläuft die Elternelemente (in Richtung Document Root) jedes Elements und findet das erste Element, das dem angegebenen Selektor entspricht.
+ * * Traverses the parents (heading toward the document root) of each element and finds the first element that matches the specified selector.
  * @param selector
- * * 🇬🇧: A string containing a selector expression.
- * * 🇩🇪: Ein String, der einen Selektor-Ausdruck enthält.
+ * * A string containing a selector expression.
  * @returns
- * * 🇬🇧: A new jBase instance containing the matched elements.
- * * 🇩🇪: Eine neue jBase-Instanz mit den gefundenen Elementen.
+ * * A new jBase instance containing the matched elements.
  */
 export function closest(this: jBase, selector: string): jBase {
     const found: Element[] = [];
@@ -45,11 +40,9 @@ export function closest(this: jBase, selector: string): jBase {
 }
 
 /**
- * * 🇬🇧: Gets the direct parent of each element in the current set. Deduplicates results.
- * * 🇩🇪: Gibt das direkte Elternelement jedes Elements in der aktuellen Auswahl zurück. Entfernt Duplikate.
+ * * Gets the direct parent of each element in the current set. Deduplicates results.
  * @returns
- * * 🇬🇧: A new jBase instance containing the parent elements.
- * * 🇩🇪: Eine neue jBase-Instanz mit den Elternelementen.
+ * * A new jBase instance containing the parent elements.
  */
 export function parent(this: jBase): jBase {
     const parents: Element[] = [];
@@ -63,14 +56,11 @@ export function parent(this: jBase): jBase {
 }
 
 /**
- * * 🇬🇧: Gets the direct children of each element in the set, optionally filtered by a selector.
- * * 🇩🇪: Gibt die direkten Kinder jedes Elements zurück, optional gefiltert durch einen Selektor.
+ * * Gets the direct children of each element in the set, optionally filtered by a selector.
  * @param selector
- * * 🇬🇧: (Optional) Filter selector.
- * * 🇩🇪: (Optional) Filter-Selektor.
+ * * (Optional) Filter selector.
  * @returns
- * * 🇬🇧: A new jBase instance containing the children.
- * * 🇩🇪: Eine neue jBase-Instanz mit den Kindern.
+ * * A new jBase instance containing the children.
  */
 export function children(this: jBase, selector?: string): jBase {
     let allChildren: Element[] = [];
@@ -90,14 +80,11 @@ export function children(this: jBase, selector?: string): jBase {
 }
 
 /**
- * * 🇬🇧: Finds descendants (deep) that match the selector using `querySelectorAll`.
- * * 🇩🇪: Findet Nachfahren (tief), die dem Selektor entsprechen. Nutzt `querySelectorAll`.
+ * * Finds descendants (deep) that match the selector using `querySelectorAll`.
  * @param selector
- * * 🇬🇧: The CSS selector to search for.
- * * 🇩🇪: Der CSS-Selektor für die Suche.
+ * * The CSS selector to search for.
  * @returns
- * * 🇬🇧: A new jBase instance with the found elements.
- * * 🇩🇪: Eine neue jBase-Instanz mit den gefundenen Elementen.
+ * * A new jBase instance with the found elements.
  */
 export function findAll(this: jBase, selector: string): jBase {
     const found: Element[] = [];
@@ -112,25 +99,20 @@ export function findAll(this: jBase, selector: string): jBase {
 }
 
 /**
- * * 🇬🇧: Recursively gets ALL descendants (not just direct children).
- * * 🇩🇪: Gibt rekursiv ALLE Nachfahren zurück (nicht nur direkte Kinder).
+ * * Recursively gets ALL descendants (not just direct children).
  * @returns
- * * 🇬🇧: A new jBase instance with all descendants.
- * * 🇩🇪: Eine neue jBase-Instanz mit allen Nachfahren.
+ * * A new jBase instance with all descendants.
  */
 export function descendants(this: jBase): jBase {
     return this.findAll('*');
 }
 
 /**
- * * 🇬🇧: Gets all ancestors (parents, grandparents...) up to the root. Optionally filtered.
- * * 🇩🇪: Gibt alle Vorfahren (Eltern, Großeltern...) zurück bis zum Root-Element. Optional gefiltert.
+ * * Gets all ancestors (parents, grandparents...) up to the root. Optionally filtered.
  * @param selector
- * * 🇬🇧: (Optional) Filter selector for ancestors.
- * * 🇩🇪: (Optional) Selektor zum Filtern der Vorfahren.
+ * * (Optional) Filter selector for ancestors.
  * @returns
- * * 🇬🇧: A new jBase instance with the ancestors.
- * * 🇩🇪: Eine neue jBase-Instanz mit den Vorfahren.
+ * * A new jBase instance with the ancestors.
  */
 export function parents(this: jBase, selector?: string): jBase {
     const ancestors: Element[] = [];
@@ -151,17 +133,13 @@ export function parents(this: jBase, selector?: string): jBase {
 }
 
 /**
- * * 🇬🇧: Gets all ancestors UP TO (but not including) an element matching the selector.
- * * 🇩🇪: Gibt alle Vorfahren zurück, BIS (aber nicht einschließlich) ein Element dem Selektor entspricht.
+ * * Gets all ancestors UP TO (but not including) an element matching the selector.
  * @param selector
- * * 🇬🇧: The selector where traversal stops.
- * * 🇩🇪: Der Selektor, bei dem gestoppt wird.
+ * * The selector where traversal stops.
  * @param filter
- * * 🇬🇧: (Optional) Filter for the collected elements.
- * * 🇩🇪: (Optional) Zusätzlicher Filter für die gefundenen Elemente.
+ * * (Optional) Filter for the collected elements.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function parentsUntil(this: jBase, selector: string, filter?: string): jBase {
     const ancestors: Element[] = [];
@@ -181,17 +159,13 @@ export function parentsUntil(this: jBase, selector: string, filter?: string): jB
 }
 
 /**
- * * 🇬🇧: Recursively finds descendants but stops traversing a branch if `untilSelector` is met. Useful for finding nested elements without going too deep (e.g., nested forms).
- * * 🇩🇪: Sucht rekursiv nach Nachfahren, stoppt aber den "Tiefgang" in einem Zweig, sobald ein Element dem `untilSelector` entspricht.
+ * * Recursively finds descendants but stops traversing a branch if `untilSelector` is met. Useful for finding nested elements without going too deep (e.g., nested forms).
  * @param untilSelector
- * * 🇬🇧: The selector that stops recursion in a branch.
- * * 🇩🇪: Der Selektor, der die Rekursion in diesem Zweig stoppt.
+ * * The selector that stops recursion in a branch.
  * @param filter
- * * 🇬🇧: (Optional) Selector to filter collected elements.
- * * 🇩🇪: (Optional) Selektor, welche Elemente gesammelt werden sollen.
+ * * (Optional) Selector to filter collected elements.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function descendantsUntil(this: jBase, untilSelector: string, filter?: string): jBase {
     const found: Element[] = [];
@@ -218,14 +192,11 @@ export function descendantsUntil(this: jBase, untilSelector: string, filter?: st
 }
 
 /**
- * * 🇬🇧: Gets the immediately following sibling.
- * * 🇩🇪: Holt das unmittelbar folgende Geschwisterelement.
+ * * Gets the immediately following sibling.
  * @param selector
- * * 🇬🇧: (Optional) Filter selector.
- * * 🇩🇪: (Optional) Filter-Selektor.
+ * * (Optional) Filter selector.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function next(this: jBase, selector?: string): jBase {
     const found: Element[] = [];
@@ -242,14 +213,11 @@ export function next(this: jBase, selector?: string): jBase {
 }
 
 /**
- * * 🇬🇧: Gets the immediately preceding sibling.
- * * 🇩🇪: Holt das unmittelbar vorhergehende Geschwisterelement.
+ * * Gets the immediately preceding sibling.
  * @param selector
- * * 🇬🇧: (Optional) Filter selector.
- * * 🇩🇪: (Optional) Filter-Selektor.
+ * * (Optional) Filter selector.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function prev(this: jBase, selector?: string): jBase {
     const found: Element[] = [];
@@ -266,38 +234,32 @@ export function prev(this: jBase, selector?: string): jBase {
 }
 
 /**
- * * 🇬🇧: Alias for `next()`.
- * * 🇩🇪: Alias für `next()`.
+ * * Alias for `next()`.
  */
 export function nextSibling(this: jBase, selector?: string): jBase {
     return this.next(selector);
 }
 
 /**
- * * 🇬🇧: Alias for `prev()`.
- * * 🇩🇪: Alias für `prev()`.
+ * * Alias for `prev()`.
  */
 export function prevSibling(this: jBase, selector?: string): jBase {
     return this.prev(selector);
 }
 
 /**
- * * 🇬🇧: Alias for `next()`.
- * * 🇩🇪: Alias für `next()`.
+ * * Alias for `next()`.
  */
 export function sibling(this: jBase, selector?: string): jBase {
     return this.next(selector);
 }
 
 /**
- * * 🇬🇧: Gets ALL following siblings.
- * * 🇩🇪: Holt ALLE nachfolgenden Geschwisterelemente.
+ * * Gets ALL following siblings.
  * @param selector
- * * 🇬🇧: (Optional) Filter selector.
- * * 🇩🇪: (Optional) Filter-Selektor.
+ * * (Optional) Filter selector.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function nextAll(this: jBase, selector?: string): jBase {
     const found: Element[] = [];
@@ -317,14 +279,11 @@ export function nextAll(this: jBase, selector?: string): jBase {
 }
 
 /**
- * * 🇬🇧: Gets ALL preceding siblings.
- * * 🇩🇪: Holt ALLE vorhergehenden Geschwisterelemente.
+ * * Gets ALL preceding siblings.
  * @param selector
- * * 🇬🇧: (Optional) Filter selector.
- * * 🇩🇪: (Optional) Filter-Selektor.
+ * * (Optional) Filter selector.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function prevAll(this: jBase, selector?: string): jBase {
     const found: Element[] = [];
@@ -344,14 +303,11 @@ export function prevAll(this: jBase, selector?: string): jBase {
 }
 
 /**
- * * 🇬🇧: Gets ALL siblings (previous and next), excluding itself.
- * * 🇩🇪: Holt ALLE Geschwisterelemente (vorherige UND nachfolgende), außer sich selbst.
+ * * Gets ALL siblings (previous and next), excluding itself.
  * @param selector
- * * 🇬🇧: (Optional) Filter selector.
- * * 🇩🇪: (Optional) Filter-Selektor.
+ * * (Optional) Filter selector.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function siblings(this: jBase, selector?: string): jBase {
     const found: Element[] = [];
@@ -359,7 +315,7 @@ export function siblings(this: jBase, selector?: string): jBase {
         if (el instanceof Element && el.parentElement) {
             const children = Array.from(el.parentElement.children);
             children.forEach(child => {
-                if (child !== el) { // Exclude self
+                if (child !== el) {
                     if (!selector || child.matches(selector)) {
                         found.push(child);
                     }
@@ -372,17 +328,13 @@ export function siblings(this: jBase, selector?: string): jBase {
 }
 
 /**
- * * 🇬🇧: Gets all following siblings UNTIL a selector is met (exclusive).
- * * 🇩🇪: Holt alle nachfolgenden Elemente BIS ein Selektor zutrifft (exklusive).
+ * * Gets all following siblings UNTIL a selector is met (exclusive).
  * @param untilSelector
- * * 🇬🇧: The selector that stops the search.
- * * 🇩🇪: Der Selektor, der die Suche stoppt.
+ * * The selector that stops the search.
  * @param filter
- * * 🇬🇧: (Optional) Filter for the found elements.
- * * 🇩🇪: (Optional) Filter für die gefundenen Elemente.
+ * * (Optional) Filter for the found elements.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function nextUntil(this: jBase, untilSelector: string, filter?: string): jBase {
     const found: Element[] = [];
@@ -402,17 +354,13 @@ export function nextUntil(this: jBase, untilSelector: string, filter?: string): 
 }
 
 /**
- * * 🇬🇧: Gets all preceding siblings UNTIL a selector is met (exclusive).
- * * 🇩🇪: Holt alle vorhergehenden Elemente BIS ein Selektor zutrifft (exklusive).
+ * * Gets all preceding siblings UNTIL a selector is met (exclusive).
  * @param untilSelector
- * * 🇬🇧: The selector that stops the search.
- * * 🇩🇪: Der Selektor, der die Suche stoppt.
+ * * The selector that stops the search.
  * @param filter
- * * 🇬🇧: (Optional) Filter for the found elements.
- * * 🇩🇪: (Optional) Filter für die gefundenen Elemente.
+ * * (Optional) Filter for the found elements.
  * @returns
- * * 🇬🇧: A new jBase instance.
- * * 🇩🇪: Eine neue jBase-Instanz.
+ * * A new jBase instance.
  */
 export function prevUntil(this: jBase, untilSelector: string, filter?: string): jBase {
     const found: Element[] = [];
@@ -432,51 +380,40 @@ export function prevUntil(this: jBase, untilSelector: string, filter?: string): 
 }
 
 /**
- * * 🇬🇧: Reduces the set to the element at the specified index. Supports negative indices.
- * * 🇩🇪: Reduziert das Set auf das Element am angegebenen Index. Unterstützt negative Indizes.
+ * * Reduces the set to the element at the specified index. Supports negative indices.
  * @param index
- * * 🇬🇧: The position (0-based). Negative values count from the end.
- * * 🇩🇪: Die Position (0-basiert). Negative Werte zählen vom Ende.
+ * * The position (0-based). Negative values count from the end.
  * @returns
- * * 🇬🇧: A new jBase instance containing the single element (or empty).
- * * 🇩🇪: Eine neue jBase-Instanz mit dem einzelnen Element (oder leer).
+ * * A new jBase instance containing the single element (or empty).
  */
 export function eq(this: jBase, index: number): jBase {
     const len = this.length;
-    // Calculate negative indices: -1 becomes len - 1
     const idx = index < 0 ? len + index : index;
-    // Get element (or undefined)
     const el = this[idx];
     const Construction = this.constructor as new (args: any) => jBase;
-    // If element exists, wrap in array, else empty array
     return new Construction(el ? [el] : []);
 }
 
 /**
- * * 🇬🇧: Reduces the set to the first element.
- * * 🇩🇪: Reduziert das Set auf das erste Element.
+ * * Reduces the set to the first element.
  */
 export function first(this: jBase): jBase {
     return this.eq(0);
 }
 
 /**
- * * 🇬🇧: Reduces the set to the last element.
- * * 🇩🇪: Reduziert das Set auf das letzte Element.
+ * * Reduces the set to the last element.
  */
 export function last(this: jBase): jBase {
     return this.eq(-1);
 }
 
 /**
- * * 🇬🇧: Filters elements based on a selector or a function.
- * * 🇩🇪: Filtert die Elemente basierend auf einem Selektor oder einer Funktion.
+ * * Filters elements based on a selector or a function.
  * @param selectorOrFn
- * * 🇬🇧: CSS selector string or filter function.
- * * 🇩🇪: CSS-Selektor (String) oder Filter-Funktion.
+ * * CSS selector string or filter function.
  * @returns
- * * 🇬🇧: A new jBase instance with filtered elements.
- * * 🇩🇪: Eine neue jBase-Instanz mit den gefilterten Elementen.
+ * * A new jBase instance with filtered elements.
  */
 export function filterBy(this: jBase, selectorOrFn: string | ((index: number, element: Element) => boolean)): jBase {
     const found: Element[] = [];
@@ -484,13 +421,10 @@ export function filterBy(this: jBase, selectorOrFn: string | ((index: number, el
     this.forEach((el, index) => {
         if (el instanceof Element) {
             if (typeof selectorOrFn === 'string') {
-                // String filter: Check matches()
                 if (el.matches(selectorOrFn)) {
                     found.push(el);
                 }
             } else if (typeof selectorOrFn === 'function') {
-                // Function filter: Check return value (true/false)
-                // 'this' inside the function is the element itself (jQuery Style)
                 if (selectorOrFn.call(el, index, el)) {
                     found.push(el);
                 }
@@ -503,14 +437,11 @@ export function filterBy(this: jBase, selectorOrFn: string | ((index: number, el
 }
 
 /**
- * * 🇬🇧: Removes elements from the set that match the selector or function (Inverse of filterBy).
- * * 🇩🇪: Entfernt Elemente aus dem Set, die dem Selektor oder der Funktion entsprechen (Das Gegenteil von filterBy).
+ * * Removes elements from the set that match the selector or function (Inverse of filterBy).
  * @param selectorOrFn
- * * 🇬🇧: CSS selector string or filter function.
- * * 🇩🇪: CSS-Selektor (String) oder Filter-Funktion.
+ * * CSS selector string or filter function.
  * @returns
- * * 🇬🇧: A new jBase instance with remaining elements.
- * * 🇩🇪: Eine neue jBase-Instanz mit den verbleibenden Elementen.
+ * * A new jBase instance with remaining elements.
  */
 export function not(this: jBase, selectorOrFn: string | ((index: number, element: Element) => boolean)): jBase {
     const found: Element[] = [];
@@ -518,12 +449,10 @@ export function not(this: jBase, selectorOrFn: string | ((index: number, element
     this.forEach((el, index) => {
         if (el instanceof Element) {
             if (typeof selectorOrFn === 'string') {
-                // Keep if it does NOT match
                 if (!el.matches(selectorOrFn)) {
                     found.push(el);
                 }
             } else if (typeof selectorOrFn === 'function') {
-                // Keep if function returns FALSE
                 if (!selectorOrFn.call(el, index, el)) {
                     found.push(el);
                 }
