@@ -1,0 +1,42 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [2.0.1] - 2026-02-04
+
+* **ReadMe (`README.md`):** Updated ReadMe for better understanding 
+
+
+## [2.0.2] - 2026-02-08
+
+### 🚀 Added (SSR & Architecture)
+
+* **Server-Side Rendering (SSR):** Full support for Node.js environments via `jsdom`.
+* Added `src/server.ts` with `parseHTML` utility.
+* Added `bind(window)` factory in `src/index.ts` to create isolated jBase instances per request.
+
+
+* **Context Awareness:** The core `jBase` class now accepts an optional `context` (Window/Document) in the constructor to support isolated environments.
+* **Environment Detection:** Added `isBrowser()` utility in `src/utils.ts` to safely distinguish between browser and server environments.
+
+### ⚡ Performance
+
+* **Data Module (`objects.ts`):** Optimized search algorithms in `find.first`, `find.last`, `find.key`, and `find.value`. moved query normalization (`toLowerCase()`) outside of loops to significantly reduce CPU overhead.
+* **Effects Module:** Added server-guards (`if (!isBrowser())`) to `fade.ts`, `slide.ts`, and `vertical.ts`. Animation logic is now skipped on the server to save resources.
+
+### 🛡️ Fixed (Stability & Logic)
+
+* **Core (`core.ts`):** Added crash protection for invalid CSS selectors. `$(...)` now catches `DOMException` errors internally and logs a warning instead of crashing.
+* **DOM Manipulation (`manipulation.ts`):**
+* Rewrote `unwrap()` using a `Set` to safely handle parent removal without conflicts on sibling elements.
+* Replaced global `window.document` usage with a `getDoc(this)` helper to prevent `ReferenceError` crashes in Node.js.
+
+
+* **HTTP Module (`http/*.ts`):** Fixed potential crash when parsing JSON from `200 OK` responses that contain an empty body.
+* **CSS Module (`styles.ts`):** Updated `css()` getter to access `getComputedStyle` via `el.ownerDocument` instead of global `window`.
+
+### 🔧 Changed & Cleaned
+
+* **Documentation:** Removed localized German JSDoc comments to reduce source code size and maintain a consistent English-only documentation standard.
+* **Config:** Fixed invalid JSON syntax in `tsconfig.json`.
+* **Type Safety:** Upgraded `isObject` utility to a TypeScript Type Guard for better type inference.
