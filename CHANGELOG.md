@@ -40,3 +40,11 @@ All notable changes to this project will be documented in this file.
 * **Documentation:** Removed localized German JSDoc comments to reduce source code size and maintain a consistent English-only documentation standard.
 * **Config:** Fixed invalid JSON syntax in `tsconfig.json`.
 * **Type Safety:** Upgraded `isObject` utility to a TypeScript Type Guard for better type inference.
+
+
+## [2.0.3] - 2026-02-13
+
+### 🛡️ Fixed (http)
+
+* **HTTP Module (`http/get.ts`):** Enforce GET method in get() and getText() utility. Overrides method to 'GET' if 'POST' is passed in options.
+* **HTTP Module (`http/post.ts`):** Enforce POST method in post() utility. Overrides method to 'POST' if 'GET' is passed in options.
