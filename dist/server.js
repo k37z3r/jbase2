@@ -1,6 +1,6 @@
 /**
  * @k37z3r/jbase - A modern micro-framework for the web: jBase offers the familiar syntax of classic DOM libraries, but without their baggage. Fully typed, modular, and optimized for modern browser engines.
- * @version 2.0.2
+ * @version 2.0.3
  * @homepage https://github.com/k37z3r/jBase-2.0
  * @author Sven Minio (https://github.com/k37z3r/jBase-2.0)
  * @license GPL-3.0-or-later
@@ -1248,9 +1248,16 @@ __export(get_exports, {
   get: () => get,
   getText: () => getText
 });
-async function get(url) {
+async function get(url, option) {
+  const fetchOptions = { ...option };
+  if (fetchOptions.method?.toLowerCase() === "post") {
+    fetchOptions.method = "GET";
+  }
+  if (!fetchOptions.signal) {
+    fetchOptions.signal = AbortSignal.timeout(5e3);
+  }
   const response = await fetch(url, {
-    signal: AbortSignal.timeout(5e3)
+    ...fetchOptions
   });
   if (!response.ok) {
     throw new Error(`HTTP Error: ${response.status}`);
@@ -1258,8 +1265,17 @@ async function get(url) {
   const text2 = await response.text();
   return text2 ? JSON.parse(text2) : {};
 }
-async function getText(url) {
-  const response = await fetch(url);
+async function getText(url, option) {
+  const fetchOptions = { ...option };
+  if (fetchOptions.method?.toLowerCase() !== "get") {
+    fetchOptions.method = "GET";
+  }
+  if (!fetchOptions.signal) {
+    fetchOptions.signal = AbortSignal.timeout(5e3);
+  }
+  const response = await fetch(url, {
+    ...fetchOptions
+  });
   if (!response.ok) {
     throw new Error(`HTTP Error: ${response.status}`);
   }
@@ -1272,9 +1288,16 @@ var post_exports = {};
 __export(post_exports, {
   post: () => post
 });
-async function post(url, body = {}) {
+async function post(url, body = {}, option) {
+  const fetchOptions = { ...option };
+  if (fetchOptions.method?.toLowerCase() !== "post") {
+    fetchOptions.method = "post";
+  }
+  if (!fetchOptions.signal) {
+    fetchOptions.signal = AbortSignal.timeout(5e3);
+  }
   const response = await fetch(url, {
-    method: "POST",
+    ...fetchOptions,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
   });
@@ -2100,7 +2123,7 @@ function parseHTML2(html2) {
  */
 /**
  * @file src/modules/http/get.ts
- * @version 2.0.2
+ * @version 2.0.3
  * @since 2.0.0
  * @license GPL-3.0-or-later
  * @copyright Sven Minio 2026
@@ -2113,8 +2136,8 @@ function parseHTML2(html2) {
  */
 /**
  * @file src/modules/http/post.ts
- * @version 2.0.2
- * @since 2.0.0
+ * @version 2.0.3
+ * @since 2.0.2
  * @license GPL-3.0-or-later
  * @copyright Sven Minio 2026
  * @author Sven Minio <https://sven-minio.de>
