@@ -1,6 +1,6 @@
 /**
  * @file src/modules/http/get.ts
- * @version 2.0.2
+ * @version 2.0.3
  * @since 2.0.0
  * @license GPL-3.0-or-later
  * @copyright Sven Minio 2026
@@ -18,14 +18,23 @@
  * * The expected type of the response data (Generic).
  * @param url
  * * The target URL for the request.
+ * @param option 
+ * * Optional RequestInit object to customize the fetch request.
  * @returns
  * * A Promise resolving with the typed JSON data.
  * @throws
  * * Error if HTTP status is not in success range (200-299) or a timeout occurs.
  */
-export async function get<T>(url: string): Promise<T> {
+export async function get<T>(url: string, option?: RequestInit): Promise<T> {
+    const fetchOptions: RequestInit = { ...option };
+    if (fetchOptions.method?.toLowerCase() === 'post') {
+        fetchOptions.method = 'GET';
+    }
+    if (!fetchOptions.signal) {
+        fetchOptions.signal = AbortSignal.timeout(5000);
+    }
     const response = await fetch(url, {
-        signal: AbortSignal.timeout(5000)
+        ...fetchOptions
     });
     if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status}`);
@@ -38,13 +47,24 @@ export async function get<T>(url: string): Promise<T> {
  * * Performs an asynchronous HTTP GET request and returns the raw text content. Ideal for loading HTML fragments (Server-Side Rendering Partials) or plain text.
  * @param url
  * * The target URL for the request.
+ * @param option 
+ * * Optional RequestInit object to customize the fetch request.
  * @returns
  * * A Promise containing the response body as a string.
  * @throws
  * * Error if HTTP status is not in success range (200-299).
  */
-export async function getText<T>(url: string): Promise<T> {
-    const response = await fetch(url);
+export async function getText<T>(url: string, option?: RequestInit): Promise<T> {
+    const fetchOptions: RequestInit = { ...option };
+    if (fetchOptions.method?.toLowerCase() !== 'get') {
+        fetchOptions.method = 'GET';
+    }
+    if (!fetchOptions.signal) {
+        fetchOptions.signal = AbortSignal.timeout(5000);
+    }
+    const response = await fetch(url, {
+        ...fetchOptions
+    });
     if (!response.ok) {
         throw new Error(`HTTP Error: ${response.status}`);
     }
