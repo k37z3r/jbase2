@@ -1,7 +1,7 @@
 /**
  * @file src/modules/http/post.ts
- * @version 2.0.2
- * @since 2.0.0
+ * @version 2.0.3
+ * @since 2.0.2
  * @license GPL-3.0-or-later
  * @copyright Sven Minio 2026
  * @author Sven Minio <https://sven-minio.de>
@@ -19,10 +19,12 @@
  * * The target URL for the request.
  * @param body
  * * The data to send (automatically JSON serialized). Default is {}.
+ * @param option
+ * * Optional RequestInit object to customize the fetch request.
  * @returns
  * * A Promise resolving with the deserialized JSON response of type T.
  * @throws
  * * Error if the HTTP status code is not in the range 200-299.
  */
-export declare function post<T>(url: string, body?: any): Promise<T>;
+export declare function post<T>(url: string, body?: any, option?: RequestInit): Promise<T>;
 //# sourceMappingURL=post.d.ts.map

@@ -26,8 +26,8 @@
  * const html = await http.getText('/templates/modal.html');
  */
 export declare const http: {
-    post<T>(url: string, body?: any): Promise<T>;
-    get<T>(url: string): Promise<T>;
-    getText<T>(url: string): Promise<T>;
+    post<T>(url: string, body?: any, option?: RequestInit): Promise<T>;
+    get<T>(url: string, option?: RequestInit): Promise<T>;
+    getText<T>(url: string, option?: RequestInit): Promise<T>;
 };
 //# sourceMappingURL=index.d.ts.map
